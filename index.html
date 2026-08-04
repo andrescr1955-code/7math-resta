@@ -17,6 +17,56 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; user-select: none; }
         .box { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 100%; max-width: 500px; text-align: center; position: relative; }
         
+        /* Estilos de la Ventana de Bienvenida */
+        .recuadro-interno {
+            border: 2px solid #ebf2fe;
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .encabezado-interno {
+            font-size: 19px;
+            font-weight: 700;
+            color: #1a56db;
+            margin: 0 0 16px 0;
+        }
+        .texto-descriptivo {
+            font-size: 15px;
+            color: #4b5563;
+            line-height: 1.5;
+            margin: 0 0 16px 0;
+        }
+        .bloque-instruccion {
+            border-left: 4px solid #10b981;
+            padding-left: 12px;
+            margin: 16px 0 0 0;
+        }
+        .texto-instruccion {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1.4;
+            margin: 0;
+        }
+        .btn-jugar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background-color: #22c55e;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        /* Estilos del Juego */
         h2 { color: var(--primary); margin-bottom: 5px; padding-bottom: 0; }
         .instruccion { color: #666; font-style: italic; font-size: 16px; margin-bottom: 15px; height: 20px; }
 
@@ -71,20 +121,19 @@
         .teclado { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
         .btn-tecla { padding: 15px 5px; font-size: 22px; cursor: pointer; border: 1px solid #ddd; border-radius: 8px; background: white; font-weight: bold; }
         
-        .btn-especial { background: var(--accent); color: white; grid-column: span 2; font-size: 14px; padding: 15px 2px; }
+        .btn-especial { background: var(--accent); color: white; grid-column: span 2; font-size: 14px; padding: 15px 2px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .btn-especial.disabled { background: #bdc3c7; cursor: not-allowed; }
-        .btn-home { background: #7f8c8d; color: white; font-size: 14px; padding: 15px 2px; }
+        .btn-home { background: #7f8c8d; color: white; font-size: 14px; padding: 15px 2px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        .consola { margin-bottom: 10px; padding: 10px; background: #2f3640; color: #f5f6fa; border-radius: 8px; font-size: 14px; border-left: 5px solid var(--accent); min-height: 20px;}
+        /* Consola oscura adaptada al estilo de PP tu amigo */
+        .consola { margin-bottom: 10px; padding: 12px; background: #1e252f; color: #f5f6fa; border-radius: 12px; font-size: 14px; border-left: 5px solid var(--accent); min-height: 45px; text-align: left; line-height: 1.4; box-sizing: border-box; }
         
-        /* Cortina de bloqueo de seguridad */
         #lock-screen { position: absolute; top:0; left:0; width:100%; height:100%; background:white; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9999; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div class="box">
-    <!-- Cortina de Seguridad Anti-Piratería -->
     <div id="lock-screen" style="display:none;">
         <span style="font-size:50px;">⏳</span>
         <h3 style="color:var(--danger); margin-top:15px;">Periodo de Evaluación Terminado</h3>
@@ -98,7 +147,24 @@
     </p>
     <div id="instruccion" class="instruccion"></div>
     
-    <div id="pantalla-inicio">
+    <div id="bienvenida-tarjeta">
+        <div class="recuadro-interno">
+            <h3 class="encabezado-interno">¡El método de siempre, ahora en tu pantalla! 🏠</h3>
+            <p class="texto-descriptivo">
+                Esta aplicación no utiliza un método nuevo ni inventa reglas extrañas. Es exactamente el mismo sistema tradicional que te enseñaron tus maestros en la escuela primaria.
+            </p>
+            <div class="bloque-instruccion">
+                <p class="texto-instruccion">
+                    "Resuelve la operación de resta de derecha a izquierda como lo hacías en la primaria."
+                </p>
+            </div>
+        </div>
+        <button class="btn-jugar" onclick="entrarAlJuego()">
+            ¡A jugar! ➡️
+        </button>
+    </div>
+
+    <div id="pantalla-inicio" style="display:none;">
         <button class="btn-nivel" onclick="iniciarNivel(1)">2 dígitos (Nivel 1)</button>
         <button class="btn-nivel" onclick="iniciarNivel(2)">3 dígitos (Nivel 2)</button>
         <button class="btn-nivel" onclick="iniciarNivel(3)">4 dígitos (Nivel 3)</button>
@@ -138,11 +204,11 @@
             <input type="text" id="r-0" class="input-res" readonly>
         </div>
 
-        <div class="consola" id="consola">Iniciando...</div>
+        <div class="consola" id="consola">¡Elige un nivel para comenzar!</div>
 
         <div class="controles-flujo">
             <button class="btn-verde" id="btn-nueva-op" onclick="reiniciarMismaCifra()">Nueva Operación</button>
-            <button class="btn-verde" id="btn-pp-amigo">PP tu amigo</button>
+            <button class="btn-verde" id="btn-pp-amigo" onclick="invocarPpAmigo()">🧑‍🏫 🏫 Tip de PP tu amigo</button>
         </div>
     </div>
 
@@ -158,9 +224,14 @@
 </div>
 
 <script>
-    // SISTEMA ANTI-PIRATERÍA (CANDADO DE FECHA Y AJUSTE DE CONTEXTO OFUSCADO)
+    function entrarAlJuego() {
+        document.getElementById('bienvenida-tarjeta').style.display = 'none';
+        document.getElementById('pantalla-inicio').style.display = 'block';
+    }
+
+    // SISTEMA ANTI-PIRATERÍA (CANDADO DE FECHA)
     (function(){
-        const _0x3b1d = new Date(2026, 6, 31); // 31 de Julio de 2026
+        const _0x3b1d = new Date(2026, 8, 30); 
         const _0x5c2a = new Date();
         if(_0x5c2a > _0x3b1d){
             window.addEventListener("load", function(){
@@ -169,7 +240,7 @@
         }
     })();
 
-    // Bloqueo de Teclado de desarrollo F12, Ctrl+Shift+I, U
+    // Bloqueo de Teclado de desarrollo F12
     window.addEventListener('keydown', function(_0x1b2e) {
         if (_0x1b2e.keyCode == 123 || (_0x1b2e.ctrlKey && _0x1b2e.shiftKey && (_0x1b2e.keyCode == 73 || _0x1b2e.keyCode == 74)) || (_0x1b2e.ctrlKey && _0x1b2e.keyCode == 85)) {
             _0x1b2e.preventDefault();
@@ -218,20 +289,13 @@
         const v1 = document.getElementById('manual-m').value;
         const v2 = document.getElementById('manual-s').value;
 
-        if (!v1 || !v2) {
-            return alert("Escribe ambos números para la resta");
-        }
+        if (!v1 || !v2) return alert("Escribe ambos números para la resta");
 
         let valM = parseInt(v1);
         let valS = parseInt(v2);
 
-        if (valS > valM) {
-            return alert("El número de arriba debe ser mayor o igual al de abajo");
-        }
-
-        if (v1.length > 4 || v2.length > 4) {
-            return alert("El número máximo permitido es de 4 dígitos");
-        }
+        if (valS > valM) return alert("El número de arriba debe ser mayor o igual al de abajo");
+        if (v1.length > 4 || v2.length > 4) return alert("El número máximo permitido es de 4 dígitos");
 
         digitosActuales = Math.max(v1.length, v2.length);
         
@@ -336,6 +400,7 @@
         }
         cursor = 0; ajusteEnFoco = null;
         refrescarUI();
+        msg("Resuelve la columna activa de derecha a izquierda.");
     }
 
     function refrescarUI() {
@@ -355,6 +420,44 @@
         document.getElementById(`r-${cursor}`).classList.add('active');
     }
 
+    /* LÓGICA EXCLUSIVA DE PP TU AMIGO ADAPTADA PARA LA RESTA */
+    function invocarPpAmigo() {
+        let n_arriba = m_orig[cursor];
+        let n_abajo = s_orig[cursor];
+        let operacion_texto = "";
+        let total_columna = n_arriba;
+
+        // Validar si la columna actual recibió 10 prestados del vecino izquierdo
+        if (recibio_izquierda[cursor]) {
+            let yaTienePrestamoColocado = document.getElementById(`in-${cursor}`).classList.contains('ajuste-ok');
+            if (nivelActual === 4 && !yaTienePrestamoColocado) {
+                msg("🧑‍🏫 🏫 <b>Tip de PP tu amigo:</b><br>En esta columna el número de arriba es menor. ¡Primero presiona el botón naranja <b>PEDIR PRESTADO</b> para traer los 10!");
+                return;
+            }
+            total_columna += 10;
+            operacion_texto += "10 (prestados) + " + n_arriba;
+        } else {
+            operacion_texto += n_arriba;
+        }
+
+        // Validar si esta columna ya le tuvo que regalar 1 a la columna derecha anterior
+        if (presto_derecha[cursor]) {
+            total_columna -= 1;
+            operacion_texto += " − 1 (que le diste al vecino)";
+        }
+
+        let resultado_final = total_columna - n_abajo;
+        
+        // Construcción del mensaje multidimensional dinámico en consola
+        let html_msg = "🧑‍🏫 🏫 <b>Tip de PP tu amigo:</b><br>";
+        html_msg += "En esta columna estás restando de arriba hacia abajo:<br>";
+        html_msg += "🔹 El número transformado de arriba es: <b>" + operacion_texto + " = " + total_columna + "</b><br>";
+        html_msg += "🔹 Le quitamos el de abajo: <b>" + total_columna + " − " + n_abajo + "</b><br>";
+        html_msg += "📉 Resta total aquí = <b>" + resultado_final + "</b>";
+
+        msg(html_msg);
+    }
+
     function gestionarPrestamo() {
         if (nivelActual === 5 || cursor >= (digitosActuales - 1)) return;
         
@@ -363,7 +466,7 @@
             let elOut = document.getElementById(`out-${cursor+1}`);
             if(!elIn.classList.contains('ajuste-ok')) { elIn.innerText = "+"; elIn.classList.add('ajuste-visible'); }
             if(!elOut.classList.contains('ajuste-ok')) { elOut.innerText = "-"; elOut.classList.add('ajuste-visible'); }
-            msg("Completa los ajustes.");
+            msg("Completa los cuadros de ajustes arriba antes de restar.");
         } 
         else {
             if (recibio_izquierda[cursor]) {
@@ -371,9 +474,9 @@
                 document.getElementById(`in-${cursor}`).classList.add('ajuste-visible', 'ajuste-ok');
                 document.getElementById(`out-${cursor+1}`).innerText = "-1";
                 document.getElementById(`out-${cursor+1}`).classList.add('ajuste-visible', 'ajuste-ok');
-                msg("¡Ajuste visual listo!");
+                msg("¡Ajuste visual de préstamos listo! Ya puedes restar.");
             } else {
-                msg("No es necesario prestar.");
+                msg("No es necesario pedir prestado en esta columna, el número de arriba es mayor o igual.");
             }
         }
     }
@@ -381,9 +484,7 @@
     function tecleo(num) {
         if (modoActual === "config") {
             const input = document.getElementById(inputActivoManual);
-            if (input.value.length < 4) {
-                input.value += num;
-            }
+            if (input.value.length < 4) input.value += num;
             return;
         }
 
@@ -407,7 +508,7 @@
         if (nivelActual === 4) {
             let elIn = document.getElementById(`in-${cursor}`);
             if (elIn.classList.contains('ajuste-visible') && !elIn.classList.contains('ajuste-ok')) {
-                return msg("Falta el ajuste de arriba.");
+                return msg("Falta colocar el ajuste en la casilla de arriba.");
             }
         }
 
@@ -420,16 +521,23 @@
 
         if (num === res_correcto) {
             input.value = num; input.className = "input-res correct";
-            if (cursor < (digitosActuales - 1)) { cursor++; refrescarUI(); msg("¡Muy bien!"); }
-            else { msg("¡RESTA TERMINADA!"); confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); }
+            if (cursor < (digitosActuales - 1)) { 
+                cursor++; 
+                refrescarUI(); 
+                msg("¡Excelente! Pasamos a la siguiente columna."); 
+            }
+            else { 
+                msg("🎉 ¡RESTA TERMINADA CON ÉXITO! ¡Felicidades!"); 
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); 
+            }
         } else {
             input.value = num; input.className = "input-res error";
-            msg("Error.");
+            msg("¡Resultado incorrecto! Intenta otra vez.");
             setTimeout(() => { input.value = ""; input.className = "input-res active"; }, 600);
         }
     }
 
-    function msg(t) { document.getElementById('consola').innerText = t; }
+    function msg(t) { document.getElementById('consola').innerHTML = t; }
 </script>
 </body>
 </html>
